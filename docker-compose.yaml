@@ -1,0 +1,16 @@
+services:
+  rabbitmq:
+    image: rabbitmq:4-management
+    container_name: food-rabbitmq
+    ports:
+      - "5672:5672"     # پورت AMQP برای ارتباط سرویس‌ها
+      - "15672:15672"   # پورت رابط مدیریت
+    environment:
+      RABBITMQ_DEFAULT_USER: guest
+      RABBITMQ_DEFAULT_PASS: guest
+    networks:
+      - food-network
+
+networks:
+  food-network:
+  driver:

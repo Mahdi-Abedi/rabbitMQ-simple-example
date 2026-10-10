@@ -1,0 +1,21 @@
+server:
+  port: 8081
+
+spring:
+  application:
+    name: producer
+  rabbitmq:
+    host: localhost
+    port: 5672
+    username: guest
+    password: guest
+
+rabbitmq:
+  exchange:
+    name: rabbitmq-exchange-name
+  queue:
+    name-custom-data: rabbitmq-queue-custom-data
+    name-message: rabbitmq-queue-message
+  routing:
+    key-custom-data: rabbitmq-routing-key-custom-data
+    key-message: rabbitmq-routing-key-message
