@@ -16,13 +16,7 @@ public class CustomDataController {
 
     @PostMapping
     public ResponseEntity<CustomData> create(@RequestBody CustomData customData) {
-        var data = customDataService.createData(customData);
+        var data = customDataService.createCustomData(customData);
         return new ResponseEntity<>(data, HttpStatus.CREATED);
-    }
-
-    @GetMapping("/message")
-    public ResponseEntity<String> sendMessage(@RequestBody String message) {
-        var data = customDataService.sendMessageToRabbitmq(message);
-        return ResponseEntity.ok("message send to RabbitMQ ...");
     }
 }

@@ -4,18 +4,16 @@ server:
 spring:
   application:
     name: consumer
-  rabbitmq:
-    host: localhost
-    port: 5672
-    username: guest
-    password: guest
-
-rabbitmq:
-  exchange:
-    name: rabbitmq-exchange-name
-  queue:
-    name-custom-data: rabbitmq-queue-custom-data
-    name-message: rabbitmq-queue-message
-  routing:
-    key-custom-data: rabbitmq-routing-key-custom-data
-    key-message: rabbitmq-routing-key-message
+  cloud:
+    function:
+      definition: handleCustomDataEvent
+    stream:
+      bindings:
+        handleCustomDataEvent-in-0:
+          destination: my.exchange
+          group: my-group
+      rabbit:
+        bindings:
+          handleCustomDataEvent-in-0:
+            consumer:
+              binding-routing-key: my.routing.key

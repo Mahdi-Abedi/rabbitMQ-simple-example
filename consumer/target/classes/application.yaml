@@ -1,0 +1,19 @@
+server:
+  port: 8082
+
+spring:
+  application:
+    name: consumer
+  cloud:
+    function:
+      definition: handleCustomDataEvent
+    stream:
+      bindings:
+        handleCustomDataEvent-in-0:
+          destination: my.exchange
+          group: my-group
+      rabbit:
+        bindings:
+          handleCustomDataEvent-in-0:
+            consumer:
+              binding-routing-key: my.routing.key

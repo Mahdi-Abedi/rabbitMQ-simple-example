@@ -6,28 +6,17 @@ import com.example.producer.entity.CustomData;
 import com.example.producer.entity.CustomDataItem;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.amqp.rabbit.core.RabbitTemplate;
-import org.springframework.beans.factory.annotation.Value;
+import org.springframework.cloud.stream.function.StreamBridge;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Map;
 
 @Service
 @RequiredArgsConstructor
 @Slf4j
 public class CustomDataService {
 
-    private final RabbitTemplate rabbitTemplate;
-
-    @Value("${rabbitmq.exchange.name}")
-    private String exchangeName;
-
-    @Value("${rabbitmq.routing.key-message}")
-    private String routingKeyMessage;
-
-    @Value("${rabbitmq.routing.key-custom-data}")
-    private String routingKeyCustomData;
+    private final StreamBridge streamBridge;
 
     public String sendMessageToRabbitmq(String data) {
 
@@ -36,14 +25,7 @@ public class CustomDataService {
         return data;
     }
 
-    public CustomData createData(CustomData data) {
-
-        publishCustomDataCreatedEvent(data);
-
-        return data;
-    }
-
-    private void publishCustomDataCreatedEvent(CustomData data) {
+    public CustomData createCustomData(CustomData data) {
         var event = new CustomDataEvent(
                 data.getId(),
                 data.getAnotherId(),
@@ -55,13 +37,14 @@ public class CustomDataService {
 
         log.info("Custom Data id: {}", data.getId());
 
-        rabbitTemplate.convertAndSend(exchangeName, routingKeyCustomData, event);
+        streamBridge.send("createCustomData-out-0", event);
+        return data;
     }
 
     private void publishStringCreatedEvent(String data) {
         log.info("String data: {}", data);
 
-        rabbitTemplate.convertAndSend(exchangeName, routingKeyMessage, Map.of("data", data));
+        //rabbitTemplate.convertAndSend(exchangeName, routingKeyMessage, Map.of("data", data));
     }
 
     private List<CustomDataItemDto> mapToCustomDataItemDtos(List<CustomDataItem> items) {

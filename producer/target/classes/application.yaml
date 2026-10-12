@@ -1,0 +1,24 @@
+server:
+  port: 8081
+
+spring:
+  application:
+    name: producer
+  rabbitmq:
+    host: localhost
+    port: 5672
+    username: guest
+    password: guest
+
+  cloud:
+    stream:
+      bindings:
+        createCustomData-out-0:
+          destination: my.exchange
+          content-type: application/json
+      rabbit:
+        bindings:
+          createCustomData-out-0:
+            producer:
+
+              routing-key-expression: '''my.routing.key'''
